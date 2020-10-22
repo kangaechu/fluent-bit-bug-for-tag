@@ -1,0 +1,13 @@
+version: '3'
+services:
+  fluent_bit:
+    build: .
+    environment:
+      FLB_LOG_LEVEL: trace
+    ports:
+      - 24224:24224
+  client:
+    image: fluent/fluentd
+    command: ["/bin/sh", "-c",  "echo '{\"log\": \"2006/01/02 15:04:05 [crit] MESSAGE\", \"source\": \"stderr\"}' | /usr/bin/fluent-cat -h host.docker.internal rails.test"]
+    depends_on: 
+        - fluent_bit
